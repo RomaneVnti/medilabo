@@ -1,0 +1,14 @@
+# Java
+**/target/
+**/.idea/
+**/.classpath
+**/.project
+**/.settings/
+**/*.iml
+
+# Node
+**/node_modules/
+**/build/
+
+# Mac
+.DS_Store
