@@ -25,7 +25,6 @@ const AddPatient = () => {
       [name]: value,
     });
 
-    // Supprimer erreur sur le champ modifié
     if (errors[name]) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };

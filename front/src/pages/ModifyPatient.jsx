@@ -31,7 +31,6 @@ const ModifyPatient = () => {
       [name]: value,
     });
 
-    // Supprime l'erreur sur ce champ si elle existe
     if (errors[name]) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
