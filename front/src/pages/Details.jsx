@@ -8,8 +8,9 @@ import ButtonBack from "../components/ButtonBack";
 import Header from "../components/Header";
 
 const Details = () => {
+  const { id } = useParams(); // Récupère l'ID du patient
   const [notesDatas, setNotesDatas] = useState([]);
-  const { id } = useParams();
+  const [risksDatas, setRisksDatas] = useState([]);
 
   const getNotes = async () => {
     try {
@@ -20,8 +21,20 @@ const Details = () => {
     }
   };
 
-  React.useEffect(() => {
-    if (id) getNotes();
+  const getRisk = async () => {
+    try {
+      const response = await axios.get("/api/risks/" + id); // endpoint via gateway
+      setRisksDatas([response.data]); // on enveloppe dans un tableau pour compatibilité avec TablePatientDetails
+    } catch (error) {
+      console.error("Erreur lors de la récupération du risque :", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getNotes();
+      getRisk();
+    }
   }, [id]);
 
   return (
@@ -30,7 +43,7 @@ const Details = () => {
         <Header />
         <ButtonAdd id={id} route="/addNote/" text="Add a note" />
       </div>
-      <TablePatientDetails notesDatas={notesDatas} />
+      <TablePatientDetails risksDatas={risksDatas} notesDatas={notesDatas} />
       <div className="footer">
         <ButtonBack id="" route="/" text="Back" />
       </div>

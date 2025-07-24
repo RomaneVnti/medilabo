@@ -23,6 +23,10 @@ public class GatewayApplication {
 						.path("/api/notes/**")
 						.filters(f -> f.stripPrefix(1))
 						.uri("http://localhost:9101"))
+				.route("risk", r -> r
+						.path("/api/risks/**")
+						.filters(f -> f.stripPrefix(1))
+						.uri("http://localhost:8082"))
 				.build();
 	}
 }
