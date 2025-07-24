@@ -17,7 +17,6 @@ public class GatewayApplication {
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 		return builder.routes()
 				.route("patients", r -> r.path("/api/patients", "/api/patients/**")
-						// Pas de rewritePath ici, on envoie le path complet au backend
 						.uri("http://localhost:8081"))
 				.build();
 	}

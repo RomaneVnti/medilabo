@@ -4,6 +4,9 @@ import com.medilabo.patient.model.Patient;
 import com.medilabo.patient.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
+
 
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +29,12 @@ public class PatientController {
     }
 
     @PostMapping("/patients")
-    public Patient addOnePatient(@RequestBody Patient patient){
+    public Patient addOnePatient(@Valid @RequestBody Patient patient){
         return patientService.addPatient(patient);
     }
 
     @PutMapping("/patients/{id}")
-    public void updatePatient(@RequestBody Patient patient, @PathVariable Integer id){
+    public void updatePatient(@Valid @RequestBody Patient patient, @PathVariable Integer id){
         patientService.updatePatient(id, patient);
     }
 
