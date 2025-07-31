@@ -23,11 +23,13 @@ public class NoteService implements INoteService{
         List<Note> allNotes = noteRepository.findAll();
         List<String> patientNotes = new ArrayList<>();
 
-        for(Note notes : allNotes){
-            if(Objects.equals(notes.getPatId(), patId)){
+        for (Note notes : allNotes) {
+            if (Objects.equals(notes.getPatId(), patId)) {
                 patientNotes.add(notes.getNote());
             }
         }
+
+        System.out.println(">>> Notes trouvées pour patient " + patId + " : " + patientNotes);
         return patientNotes;
     }
     @Override

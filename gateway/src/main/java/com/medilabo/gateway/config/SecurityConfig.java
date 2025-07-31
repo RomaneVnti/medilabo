@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/api/patients/**").authenticated()
+                        .pathMatchers("/api/patients/**").permitAll()
                         .anyExchange().permitAll()
                 )
                 .httpBasic()

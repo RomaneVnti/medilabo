@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  front:
+    build: ./front
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+    networks:
+      - medilabo-network
+
+  patient:
+    build: ./patient
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/patient
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - medilabo-network
+
+  notes:
+    build: ./notes
+    ports:
+      - "9101:9101"
+    environment:
+      MONGODB_URI: mongodb://host.docker.internal:27017/notes
+    networks:
+      - medilabo-network
+
+  risk:
+    build: ./risk
+    ports:
+      - "8082:8082"
+    depends_on:
+      - notes
+      - patient
+    networks:
+      - medilabo-network
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - patient
+      - notes
+      - risk
+    networks:
+      - medilabo-network
+
+  mongo:
+    image: mongo:6.0
+    container_name: medilabo-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - medilabo-network
+
+volumes:
+  mongo-data:
+
+networks:
+  medilabo-network:
+    driver: bridge

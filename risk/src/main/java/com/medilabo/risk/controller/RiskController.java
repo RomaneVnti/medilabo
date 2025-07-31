@@ -15,7 +15,7 @@ public class RiskController {
     @Autowired
     private RiskService riskService;
 
-    @GetMapping("/risks/{patId}")
+    @GetMapping("api/risks/{patId}")
     public List<Risk> getPatientsRisks(@PathVariable Integer patId){
         return riskService.setRiskLevel(patId);
     }
