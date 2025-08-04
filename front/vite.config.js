@@ -11,7 +11,6 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      // Si tu as d'autres endpoints, tu peux ajouter d'autres règles ici
     }
   }
 })

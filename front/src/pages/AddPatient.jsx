@@ -5,7 +5,9 @@ import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import ButtonBack from "../components/ButtonBack";
 
+// Formulaire d'ajout d'un nouveau patient
 const AddPatient = () => {
+  // État du formulaire
   const [state, setState] = useState({
     firstName: "",
     lastName: "",
@@ -15,9 +17,11 @@ const AddPatient = () => {
     phoneNumber: "",
   });
 
+  // État pour les erreurs de validation côté serveur
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  // Gère les changements dans les champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setState({
@@ -25,6 +29,7 @@ const AddPatient = () => {
       [name]: value,
     });
 
+    // Supprime l'erreur associée au champ modifié (si existante)
     if (errors[name]) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -34,6 +39,7 @@ const AddPatient = () => {
     }
   };
 
+  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

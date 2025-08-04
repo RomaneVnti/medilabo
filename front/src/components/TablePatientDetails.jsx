@@ -8,10 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect } from "react";
 
+// Composant affichant les détails d'un patient : âge, risque et notes associées
 export default function TablePatientDetails({ risksDatas, notesDatas }) {
   useEffect(() => {
   }, [risksDatas, notesDatas]);
-
+  // Récupère le premier objet de risque, avec double tableau imbriqué
   const risk = risksDatas?.[0]?.[0];
 
   if (!risk || !notesDatas) {
@@ -39,7 +40,7 @@ export default function TablePatientDetails({ risksDatas, notesDatas }) {
             <TableCell align="center">{risk.risk ?? "N/A"}</TableCell>
             <TableCell>
               {notesDatas.map((n, index) => (
-                <p key={index}>- {n}</p>
+                <p key={index}>- {n}</p> // Affiche chaque note sous forme de puce
               ))}
             </TableCell>
           </TableRow>

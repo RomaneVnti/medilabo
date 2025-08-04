@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+// Bouton de suppression avec confirmation
 const ButtonDeletePatient = ({ id, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+// Envoie la requête de suppression puis ferme la confirmation
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/patients/${id}`);
-      onDelete(); // ❗ on rafraîchit la liste dans Home
+      onDelete();
     } catch (error) {
       console.error(error);
     }

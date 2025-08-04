@@ -13,16 +13,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Service pour évaluer le niveau de risque d'un patient.
+ */
 @Service
 public class RiskService {
 
     private final PatientProxy patientProxy;
     private final NoteProxy noteProxy;
 
+    /**
+     * Constructeur avec injection des proxies Patient et Note.
+     *
+     * @param patientProxy proxy pour accéder aux données patients
+     * @param noteProxy proxy pour accéder aux notes des patients
+     */
     public RiskService(PatientProxy patientProxy, NoteProxy noteProxy) {
         this.patientProxy = patientProxy;
         this.noteProxy = noteProxy;
     }
+
+    /**
+     * Calcule le niveau de risque d'un patient en fonction de ses notes et de ses informations.
+     *
+     * @param patId l'identifiant du patient
+     * @return une liste contenant l'objet Risk correspondant au patient
+     */
     public List<Risk> setRiskLevel(Integer patId) {
         PatientBean patient = patientProxy.getOnePatient(patId);
         List<Risk> listAllRisk = new ArrayList<>();
@@ -57,9 +73,9 @@ public class RiskService {
 
         if (triggerCount == 0 || triggerCount == 1) {
             risk.setRisk("none");
-        }else if(triggerCount >= 2 && triggerCount <= 5 && age > 30){
+        } else if (triggerCount >= 2 && triggerCount <= 5 && age > 30) {
             risk.setRisk("Borderline");
-        }else if ((triggerCount == 6 || triggerCount == 7) && age > 30) {
+        } else if ((triggerCount == 6 || triggerCount == 7) && age > 30) {
             risk.setRisk("in Danger");
         } else if ((Objects.equals(gender, "M") && triggerCount == 3 && age < 30) ||
                 (Objects.equals(gender, "F") && triggerCount == 4 && age < 30)) {
@@ -73,6 +89,5 @@ public class RiskService {
         listAllRisk.add(risk);
 
         return listAllRisk;
-
     }
 }

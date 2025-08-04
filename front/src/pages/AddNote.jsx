@@ -5,16 +5,17 @@ import Header from "../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import ButtonBack from "../components/ButtonBack";
 
+// Composant pour ajouter une note à un patient
 const AddNote = () => {
-  const { id } = useParams(); // id du patient
+  const { id } = useParams(); // Récupère l'identifiant du patient depuis l'URL
   const navigate = useNavigate();
 
-  const [patientDatas, setPatientDatas] = useState(null);
+  const [patientDatas, setPatientDatas] = useState(null); // Stocke les données du patient
 
+  // Récupère les infos du patient au chargement du composant
   useEffect(() => {
     const getPatient = async () => {
       try {
-        // Correction : ajout slash avant api
         const res = await axios.get("/api/patients/" + id);
         setPatientDatas(res.data);
       } catch (error) {
@@ -25,12 +26,13 @@ const AddNote = () => {
     if (id) getPatient();
   }, [id]);
 
+  // État local pour le formulaire
   const [state, setState] = useState({
     patId: "",
     patient: "",
     note: "",
   });
-
+  // Gère les changements dans le champ de saisie
   const handleChange = (e) => {
     const value = e.target.value;
     setState({
@@ -38,7 +40,7 @@ const AddNote = () => {
       [e.target.name]: value,
     });
   };
-
+  // Envoie de la note au backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -49,7 +51,7 @@ const AddNote = () => {
       };
       const response = await axios.post("/api/notes", noteData);
       console.log(response.status, response.data);
-      navigate("/details/" + id);
+      navigate("/details/" + id); // Redirige vers la page de détails du patient
     } catch (error) {
       console.error("Erreur lors de l'ajout de note :", error);
     }
