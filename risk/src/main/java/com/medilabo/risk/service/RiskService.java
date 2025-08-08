@@ -48,42 +48,62 @@ public class RiskService {
 
         LocalDate birthdate = patient.getBirthdate();
         LocalDate currentDate = LocalDate.now();
-        Integer patientAge = Period.between(birthdate, currentDate).getYears();
-        risk.setAge(patientAge);
+        int age = Period.between(birthdate, currentDate).getYears();
+        risk.setAge(age);
 
         List<String> patientNote = noteProxy.listDesNotes(patId);
 
         String[] triggerWords = {"Poids", "Taille", "Anticorps", "Cholestérol", "Réaction", "Rechute", "Anormal",
                 "Hémoglobine A1C", "Microalbumine", "Fumeur", "Fumeuse", "Vertiges"};
 
-        int trigger = 0;
-
-        for (String chain : patientNote) {
+        int triggerCount = 0;
+        for (String note : patientNote) {
             for (String word : triggerWords) {
-                if (chain.toLowerCase().contains(word.toLowerCase())) {
-                    trigger++;
+                if (note.toLowerCase().contains(word.toLowerCase())) {
+                    triggerCount++;
                 }
             }
         }
-        risk.setTrigger(trigger);
+        risk.setTrigger(triggerCount);
 
-        int triggerCount = risk.getTrigger();
-        int age = risk.getAge();
         String gender = patient.getGender();
 
-        if (triggerCount == 0 || triggerCount == 1) {
-            risk.setRisk("none");
-        } else if (triggerCount >= 2 && triggerCount <= 5 && age > 30) {
-            risk.setRisk("Borderline");
-        } else if ((triggerCount == 6 || triggerCount == 7) && age > 30) {
-            risk.setRisk("in Danger");
-        } else if ((Objects.equals(gender, "M") && triggerCount == 3 && age < 30) ||
-                (Objects.equals(gender, "F") && triggerCount == 4 && age < 30)) {
-            risk.setRisk("in Danger");
-        } else if ((Objects.equals(gender, "M") && triggerCount == 5 && age < 30) ||
-                (Objects.equals(gender, "F") && triggerCount == 7 && age < 30) ||
-                (triggerCount >= 8 && age > 30)) {
-            risk.setRisk("Early onset");
+        if (triggerCount == 0) {
+            risk.setRisk("None");
+        } else {
+            if (age > 30) {
+                if (triggerCount >= 8) {
+                    risk.setRisk("Early onset");
+                } else if (triggerCount >= 6) {
+                    risk.setRisk("In Danger");
+                } else if (triggerCount >= 2) {
+                    risk.setRisk("Borderline");
+                } else {
+                    risk.setRisk("None");
+                }
+            } else {
+                switch (gender) {
+                    case "M" -> {
+                        if (triggerCount >= 5) {
+                            risk.setRisk("Early onset");
+                        } else if (triggerCount >= 3) {
+                            risk.setRisk("In Danger");
+                        } else {
+                            risk.setRisk("None");
+                        }
+                    }
+                    case "F", "Other" -> {
+                        if (triggerCount >= 7) {
+                            risk.setRisk("Early onset");
+                        } else if (triggerCount >= 4) {
+                            risk.setRisk("In Danger");
+                        } else {
+                            risk.setRisk("None");
+                        }
+                    }
+                    default -> risk.setRisk("None");
+                }
+            }
         }
 
         listAllRisk.add(risk);
